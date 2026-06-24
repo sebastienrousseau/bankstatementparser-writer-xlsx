@@ -1,0 +1,16 @@
+name: "bankstatementparser-writer-xlsx CodeQL config"
+
+# Examples deliberately demonstrate the writer with sample statement
+# data (IBANs, amounts). CodeQL's ``py/clear-text-logging-sensitive-data``
+# heuristic flags ``print(...)`` of any expression downstream of those
+# fields even when the values are obviously fake fixtures. Excluding the
+# demo directory keeps the scan focused on production code in
+# ``bankstatementparser_writer_xlsx/``.
+paths-ignore:
+  - examples
+  - tests
+
+# Use the default + security-extended query suite so we get the same
+# coverage GitHub's default setup would have offered.
+queries:
+  - uses: security-and-quality
