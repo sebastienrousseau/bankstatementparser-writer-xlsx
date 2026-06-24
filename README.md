@@ -11,7 +11,7 @@
 into a polished workbook that accountants, auditors, and reconciliation
 macros can open directly.
 
-> **Latest release: v0.0.10** — single `write_xlsx(data, path, ...)`
+> **Latest release: v0.0.11** — single `write_xlsx(data, path, ...)`
 > function, 100% line + branch coverage, 100% docstring coverage,
 > `mypy --strict` clean.
 

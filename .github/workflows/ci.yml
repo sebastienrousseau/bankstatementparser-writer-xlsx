@@ -100,3 +100,35 @@ jobs:
       - name: Run examples
         run: |
           for f in examples/*.py; do echo "=== $f ==="; python "$f"; done
+
+  smoke:
+    name: Install smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Build the wheel
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --wheel
+
+      - name: Install the wheel into a fresh virtualenv
+        run: |
+          python -m venv "$RUNNER_TEMP/smoke"
+          "$RUNNER_TEMP/smoke/bin/pip" install --upgrade pip
+          "$RUNNER_TEMP/smoke/bin/pip" install dist/*.whl
+
+      - name: Import the installed package
+        run: |
+          "$RUNNER_TEMP/smoke/bin/python" -c "import bankstatementparser_writer_xlsx as w; print(w.__version__)"
+
+      - name: Run an example from a neutral working directory
+        run: |
+          cd "$RUNNER_TEMP" && "$RUNNER_TEMP/smoke/bin/python" "$GITHUB_WORKSPACE/examples/01_write_dataframe.py"
