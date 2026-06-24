@@ -5,6 +5,28 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.0.11] - 2026-06-24
+
+### Added
+
+- Install smoke-test CI job (`smoke`) that builds the wheel, installs it
+  into a fresh virtualenv from PyPI (pulling `bankstatementparser`,
+  `openpyxl`, and `pandas`), imports the package, and runs an example
+  from a neutral working directory — proving the published artifact is
+  importable and usable, not just the editable checkout.
+- Expanded edge-case tests that read each workbook back and assert exact
+  cells: empty list vs. empty `DataFrame`-with-columns; Unicode text and
+  a string longer than the 60-character column-width cap; `None`/`NaN`
+  cells; `list[dict]` with differing/missing keys (union, first-seen
+  order); large and negative `Decimal` amounts; `date` vs. `datetime`
+  cells; and a custom `sheet_name` combined with a `summary=` sheet.
+
+### Changed
+
+- Pruned over-scaffolded CI: removed the `nightly.yml` and `docs.yml`
+  workflows. The retained workflows are `ci.yml`, `pr.yml`, `codeql.yml`,
+  `security.yml`, and `release.yml`.
+
 ## [0.0.10] - 2026-06-24
 
 ### Added
@@ -41,4 +63,5 @@ project adheres to [Semantic Versioning](https://semver.org/).
   (`test_docs_accuracy.py`, `test_regression_docs.py`,
   `test_regression_examples.py`).
 
+[0.0.11]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.11
 [0.0.10]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.10

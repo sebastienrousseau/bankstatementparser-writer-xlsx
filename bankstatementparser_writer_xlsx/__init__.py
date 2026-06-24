@@ -27,4 +27,4 @@ from .writer import write_xlsx
 
 __all__ = ["write_xlsx", "__version__"]
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"

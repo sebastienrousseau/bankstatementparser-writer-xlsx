@@ -25,8 +25,10 @@ import pandas as pd
 import pytest
 from bankstatementparser import Transaction
 from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 
 from bankstatementparser_writer_xlsx import __version__, write_xlsx
+from bankstatementparser_writer_xlsx.writer import _MAX_COLUMN_WIDTH
 
 
 def _transactions() -> list[Transaction]:
@@ -59,7 +61,7 @@ def _transactions() -> list[Transaction]:
 def test_version_exposed() -> None:
     """The package exposes a non-empty semantic-style version string."""
     assert isinstance(__version__, str)
-    assert __version__ == "0.0.10"
+    assert __version__ == "0.0.11"
 
 
 def test_returns_path_and_writes_file(tmp_path: Path) -> None:
@@ -260,3 +262,174 @@ def test_unsupported_item_type_raises_valueerror(tmp_path: Path) -> None:
     """A sequence item that is neither dict nor Transaction raises."""
     with pytest.raises(ValueError):
         write_xlsx([42], tmp_path / "bad-item.xlsx")
+
+
+# ----------------------------------------------------------------------
+# Edge cases — read the workbook back and assert exact cells.
+# ----------------------------------------------------------------------
+
+
+def test_empty_list_has_no_header_or_rows(tmp_path: Path) -> None:
+    """An empty list writes a workbook with neither header nor data."""
+    out = tmp_path / "empty-list.xlsx"
+
+    write_xlsx([], out)
+
+    sheet = load_workbook(out)["Transactions"]
+    assert list(sheet.iter_rows(values_only=True)) == []
+    # No bold header cell was written at all.
+    assert sheet.max_row == 1
+    assert sheet["A1"].value is None
+
+
+def test_empty_dataframe_with_columns_writes_header_only(
+    tmp_path: Path,
+) -> None:
+    """An empty DataFrame carrying columns writes a header-only sheet."""
+    frame = pd.DataFrame(columns=["account_id", "amount", "currency"])
+    out = tmp_path / "empty-df-cols.xlsx"
+
+    write_xlsx(frame, out)
+
+    sheet = load_workbook(out)["Transactions"]
+    header = [cell.value for cell in sheet[1]]
+    assert header == ["account_id", "amount", "currency"]
+    assert all(cell.font.bold for cell in sheet[1])
+    assert list(sheet.iter_rows(min_row=2, values_only=True)) == []
+
+
+def test_unicode_and_overlong_string_cell(tmp_path: Path) -> None:
+    """Unicode round-trips and an overlong string caps the column width."""
+    long_text = "A" * 200
+    out = tmp_path / "unicode.xlsx"
+
+    write_xlsx([{"note": "Café Münster 日本語 €", "long": long_text}], out)
+
+    sheet = load_workbook(out)["Transactions"]
+    rows = list(sheet.iter_rows(min_row=2, values_only=True))
+    # Unicode content is preserved byte-for-byte on round-trip.
+    assert rows[0][0] == "Café Münster 日本語 €"
+    # The overlong string is stored verbatim (no truncation of content)...
+    assert rows[0][1] == long_text
+    assert len(rows[0][1]) == 200
+    # ...but its column width is clamped to the 60-char cap.
+    width = sheet.column_dimensions[get_column_letter(2)].width
+    assert width == _MAX_COLUMN_WIDTH
+
+
+def test_none_and_nan_cells_round_trip_as_blank(tmp_path: Path) -> None:
+    """``None`` and ``NaN`` cells both read back as empty cells."""
+    frame = pd.DataFrame({"amount": [1.0, None], "description": ["x", None]})
+    dict_out = tmp_path / "nan-dict.xlsx"
+    df_out = tmp_path / "nan-df.xlsx"
+
+    write_xlsx([{"amount": float("nan"), "description": None}], dict_out)
+    write_xlsx(frame, df_out)
+
+    dict_rows = list(
+        load_workbook(dict_out)["Transactions"].iter_rows(
+            min_row=2, values_only=True
+        )
+    )
+    # Explicit None and float NaN both serialise to an empty cell.
+    assert dict_rows == [(None, None)]
+
+    df_rows = list(
+        load_workbook(df_out)["Transactions"].iter_rows(
+            min_row=2, values_only=True
+        )
+    )
+    assert df_rows[0] == (1.0, "x")
+    assert df_rows[1] == (None, None)
+
+
+def test_dict_records_with_missing_keys_union_first_seen(
+    tmp_path: Path,
+) -> None:
+    """list[dict] with differing keys yields a first-seen-order union."""
+    records = [
+        {"a": 1, "b": 2},
+        {"b": 20, "c": 30},
+        {"a": 100, "d": 400},
+    ]
+    out = tmp_path / "union.xlsx"
+
+    write_xlsx(records, out)
+
+    sheet = load_workbook(out)["Transactions"]
+    header = [cell.value for cell in sheet[1]]
+    # Union of keys, in the order each key is first encountered.
+    assert header == ["a", "b", "c", "d"]
+    rows = list(sheet.iter_rows(min_row=2, values_only=True))
+    assert rows[0] == (1, 2, None, None)
+    assert rows[1] == (None, 20, 30, None)
+    assert rows[2] == (100, None, None, 400)
+
+
+def test_large_and_negative_decimal_amounts(tmp_path: Path) -> None:
+    """Large and negative Decimals coerce to exact float values."""
+    out = tmp_path / "decimals.xlsx"
+
+    write_xlsx(
+        [
+            {"big": Decimal("123456789012.34")},
+            {"big": Decimal("-9999.99")},
+        ],
+        out,
+    )
+
+    sheet = load_workbook(out)["Transactions"]
+    rows = list(sheet.iter_rows(min_row=2, values_only=True))
+    assert isinstance(rows[0][0], float)
+    assert rows[0][0] == pytest.approx(123456789012.34)
+    assert isinstance(rows[1][0], float)
+    assert rows[1][0] == pytest.approx(-9999.99)
+
+
+def test_date_and_datetime_cells(tmp_path: Path) -> None:
+    """A ``date`` cell loses no day; a ``datetime`` keeps its time."""
+    out = tmp_path / "datetimes.xlsx"
+
+    write_xlsx(
+        [{"d": date(2026, 6, 1), "dt": datetime(2026, 6, 1, 13, 30, 15)}],
+        out,
+    )
+
+    sheet = load_workbook(out)["Transactions"]
+    rows = list(sheet.iter_rows(min_row=2, values_only=True))
+    d_cell, dt_cell = rows[0]
+    # openpyxl reads a plain date back as a midnight datetime.
+    assert isinstance(d_cell, datetime)
+    assert d_cell == datetime(2026, 6, 1, 0, 0)
+    # A datetime preserves its time-of-day.
+    assert isinstance(dt_cell, datetime)
+    assert dt_cell == datetime(2026, 6, 1, 13, 30, 15)
+
+
+def test_custom_sheet_name_with_summary_second_sheet(
+    tmp_path: Path,
+) -> None:
+    """A custom sheet_name plus summary= yields both named sheets."""
+    out = tmp_path / "named-summary.xlsx"
+
+    write_xlsx(
+        [{"amount": Decimal("12.50"), "currency": "GBP"}],
+        out,
+        sheet_name="Ledger",
+        summary={"count": 1, "total": Decimal("12.50")},
+    )
+
+    workbook = load_workbook(out)
+    assert workbook.sheetnames == ["Ledger", "Summary"]
+
+    ledger = workbook["Ledger"]
+    assert [cell.value for cell in ledger[1]] == ["amount", "currency"]
+    assert ledger["A2"].value == pytest.approx(12.5)
+
+    summary = workbook["Summary"]
+    assert [cell.value for cell in summary[1]] == ["Key", "Value"]
+    assert all(cell.font.bold for cell in summary[1])
+    summary_rows = list(summary.iter_rows(min_row=2, values_only=True))
+    assert summary_rows[0] == ("count", 1)
+    assert summary_rows[1][0] == "total"
+    assert summary_rows[1][1] == pytest.approx(12.5)
