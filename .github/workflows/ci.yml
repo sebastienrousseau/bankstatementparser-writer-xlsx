@@ -99,5 +99,4 @@ jobs:
 
       - name: Run examples
         run: |
-          python examples/01_minimal_write.py
-          python examples/02_write_with_summary.py
+          for f in examples/*.py; do echo "=== $f ==="; python "$f"; done
