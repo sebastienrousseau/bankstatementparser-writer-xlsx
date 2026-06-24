@@ -6,7 +6,7 @@ companion of the
 library. The versions are **target** windows; releases ship when the
 gates pass, not on a calendar.
 
-## v0.0.1 - Initial release (current)
+## v0.0.10 - Initial release (current)
 
 - Single `write_xlsx(data, path, *, sheet_name, summary)` function
   accepting a pandas `DataFrame`, a list of `Transaction` objects, or a
