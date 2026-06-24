@@ -13,28 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Example: write a DataFrame plus a Summary sheet.
+"""Example: write a workbook with a second ``Summary`` sheet.
 
-This mirrors the real workflow: a ``bankstatementparser`` parser
-returns a DataFrame from ``.parse()`` and a summary mapping from
-``.get_summary()``. Here both are built inline so the script runs with
-no input files.
+Passing ``summary=`` a mapping (e.g. a parser's ``get_summary()``
+result) adds a second sheet titled ``Summary`` with a bold
+``Key``/``Value`` header. The workbook is written to a temporary file,
+read back with openpyxl, and the temp file is removed.
 
-Run with ``python examples/02_write_with_summary.py``. The output file
-``out_summary.xlsx`` is written to the current directory.
+Run with ``python examples/04_write_with_summary.py``.
 """
 
+from __future__ import annotations
+
+import tempfile
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
 
 import pandas as pd
+from openpyxl import load_workbook
 
 from bankstatementparser_writer_xlsx import write_xlsx
 
 
 def main() -> None:
-    """Write a DataFrame and an accompanying Summary sheet."""
+    """Write Transactions + Summary sheets and read both back."""
     frame = pd.DataFrame(
         {
             "date": [date(2026, 6, 1), date(2026, 6, 3)],
@@ -49,9 +52,19 @@ def main() -> None:
         "total_amount": Decimal("2995.80"),
         "currency": "EUR",
     }
-    out = Path("out_summary.xlsx")
-    write_xlsx(frame, out, summary=summary)
-    print(f"Wrote {out.resolve()} with Transactions + Summary sheets")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp) / "summary.xlsx"
+        write_xlsx(frame, out, summary=summary)
+
+        workbook = load_workbook(out)
+        summary_rows = list(
+            workbook["Summary"].iter_rows(min_row=2, values_only=True)
+        )
+
+        print(f"Wrote {out.name}")
+        print(f"Sheets:       {workbook.sheetnames}")
+        print(f"Summary rows: {len(summary_rows)}")
 
 
 if __name__ == "__main__":

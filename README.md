@@ -11,7 +11,7 @@
 into a polished workbook that accountants, auditors, and reconciliation
 macros can open directly.
 
-> **Latest release: v0.0.1** — single `write_xlsx(data, path, ...)`
+> **Latest release: v0.0.10** — single `write_xlsx(data, path, ...)`
 > function, 100% line + branch coverage, 100% docstring coverage,
 > `mypy --strict` clean.
 
@@ -57,10 +57,10 @@ pip install bankstatementparser-writer-xlsx
 ## Quick start
 
 ```python
-from bankstatementparser import CsvParser
+from bankstatementparser import CsvStatementParser
 from bankstatementparser_writer_xlsx import write_xlsx
 
-parser = CsvParser("statement.csv")
+parser = CsvStatementParser("statement.csv")
 df = parser.parse()                      # a pandas DataFrame
 write_xlsx(df, "statement.xlsx")         # one polished workbook
 ```
@@ -69,6 +69,11 @@ That's an Excel workbook ready for your accountant. Add a summary sheet
 in one extra argument:
 
 ```python
+from bankstatementparser import CsvStatementParser
+from bankstatementparser_writer_xlsx import write_xlsx
+
+parser = CsvStatementParser("statement.csv")
+df = parser.parse()
 write_xlsx(df, "statement.xlsx", summary=parser.get_summary())
 ```
 
@@ -110,6 +115,15 @@ If you pass `summary=` a mapping (for example a parser's
 `Summary` with a bold `Key` / `Value` header and one row per item:
 
 ```python
+from decimal import Decimal
+
+from bankstatementparser_writer_xlsx import write_xlsx
+
+transactions = [
+    {"date": "2026-06-01", "description": "Salary", "amount": Decimal("3000.00")},
+    {"date": "2026-06-03", "description": "Coffee Shop", "amount": Decimal("-4.20")},
+]
+
 write_xlsx(
     transactions,
     "out.xlsx",
@@ -124,13 +138,20 @@ write_xlsx(
 
 ## Examples
 
-Two runnable examples live in [`examples/`](examples/) and are exercised
-in CI on every commit:
+Five runnable examples live in [`examples/`](examples/) and are
+exercised in CI on every commit. Together they cover every supported
+input shape and option of `write_xlsx`:
 
-- [`01_minimal_write.py`](examples/01_minimal_write.py) — write a list
-  of `Transaction` objects to a single sheet.
-- [`02_write_with_summary.py`](examples/02_write_with_summary.py) —
-  write a DataFrame plus a `Summary` sheet.
+- [`01_write_dataframe.py`](examples/01_write_dataframe.py) — write a
+  pandas `DataFrame` to a single sheet.
+- [`02_write_transactions.py`](examples/02_write_transactions.py) —
+  write a list of `Transaction` objects in stable field order.
+- [`03_write_dicts.py`](examples/03_write_dicts.py) — write a list of
+  plain `dict` records (union of keys).
+- [`04_write_with_summary.py`](examples/04_write_with_summary.py) —
+  write a DataFrame plus a second `Summary` sheet via `summary=`.
+- [`05_custom_sheet_name.py`](examples/05_custom_sheet_name.py) — rename
+  the transactions sheet with `sheet_name=`.
 
 ## When not to use this package
 

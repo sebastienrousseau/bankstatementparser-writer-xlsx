@@ -13,23 +13,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Minimal example: write a list of Transactions to an Excel workbook.
+"""Example: write a list of ``Transaction`` objects to a workbook.
 
-Run with ``python examples/01_minimal_write.py``. The output file
-``out_minimal.xlsx`` is written to the current directory.
+Transactions are serialised with a stable, documented column order. The
+workbook is written to a temporary file, read back with openpyxl to
+prove it round-trips, and the temp file is removed.
+
+Run with ``python examples/02_write_transactions.py``.
 """
 
+from __future__ import annotations
+
+import tempfile
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
 
 from bankstatementparser import Transaction
+from openpyxl import load_workbook
 
 from bankstatementparser_writer_xlsx import write_xlsx
 
 
 def main() -> None:
-    """Build two transactions and write them to a workbook."""
+    """Write two transactions, read them back, and print a summary."""
     transactions = [
         Transaction(
             account_id="DE89370400440532013000",
@@ -48,9 +55,18 @@ def main() -> None:
             counterparty="Coffee Shop",
         ),
     ]
-    out = Path("out_minimal.xlsx")
-    write_xlsx(transactions, out)
-    print(f"Wrote {out.resolve()}")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp) / "transactions.xlsx"
+        write_xlsx(transactions, out)
+
+        sheet = load_workbook(out)["Transactions"]
+        header = [cell.value for cell in sheet[1]]
+        data_rows = list(sheet.iter_rows(min_row=2, values_only=True))
+
+        print(f"Wrote {out.name}")
+        print(f"Header[:3]: {header[:3]}")
+        print(f"Rows:       {len(data_rows)}")
 
 
 if __name__ == "__main__":
