@@ -30,9 +30,15 @@ project adheres to [Semantic Versioning](https://semver.org/).
 - Explicit error handling: `TypeError` for unsupported top-level types,
   `ValueError` for unsupported sequence items. Empty input writes an
   empty (or header-only) sheet.
-- Two runnable examples (`01_minimal_write.py`,
-  `02_write_with_summary.py`) exercised in CI.
+- Five runnable examples covering every supported input shape and
+  option (`01_write_dataframe.py`, `02_write_transactions.py`,
+  `03_write_dicts.py`, `04_write_with_summary.py`,
+  `05_custom_sheet_name.py`). Each writes to a temp file, reads it back
+  with openpyxl, and is exercised in CI.
 - Quality gates: 100% line + branch test coverage, 100% docstring
-  coverage (interrogate), `ruff` lint, and `mypy --strict`.
+  coverage (interrogate), `ruff` lint, and `mypy --strict`. README,
+  docs, and example consistency are enforced by an automated suite
+  (`test_docs_accuracy.py`, `test_regression_docs.py`,
+  `test_regression_examples.py`).
 
 [0.0.1]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.1
