@@ -129,6 +129,10 @@ BLOCK_SPECS: tuple[BlockSpec, ...] = (
     BlockSpec(
         marker='"transaction_count": 128,',
     ),
+    # README -- Errors (both error paths raise before any file is written).
+    BlockSpec(
+        marker='write_xlsx("not-a-table", "out.xlsx")  # a bare str',
+    ),
 )
 
 

@@ -204,6 +204,20 @@ class TestNumericClaims:
             f"column-width cap"
         )
 
+    def test_readme_documents_column_width_cap(self) -> None:
+        """The README states the exact column-width cap value."""
+        assert f"{_MAX_COLUMN_WIDTH} characters" in self.readme_text, (
+            f"README should document the {_MAX_COLUMN_WIDTH}-character "
+            f"column-width cap"
+        )
+
+    def test_readme_documents_error_paths(self) -> None:
+        """The README documents both raised exception types."""
+        for exc in ("TypeError", "ValueError"):
+            assert (
+                exc in self.readme_text
+            ), f"README should document the {exc} error path of write_xlsx"
+
     def test_python_minimum_matches_pyproject(self) -> None:
         """The README's minimum Python version matches pyproject."""
         pyproject = _read(PYPROJECT)

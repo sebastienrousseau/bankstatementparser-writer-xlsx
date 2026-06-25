@@ -15,6 +15,7 @@ python examples/<name>.py
 | [`03_write_dicts.py`](03_write_dicts.py) | Writing a list of plain `dict` records (header is the union of keys, first-seen order) |
 | [`04_write_with_summary.py`](04_write_with_summary.py) | Adding a second `Summary` sheet via `summary=` (a `get_summary()`-style mapping) |
 | [`05_custom_sheet_name.py`](05_custom_sheet_name.py) | Renaming the transactions sheet with `sheet_name=` |
+| [`06_value_coercion_and_errors.py`](06_value_coercion_and_errors.py) | Value coercion (`Decimal`→`float`, `date`/`datetime`, `None`/`NaN`/missing keys → blank), the 60-char column-width cap, and the `TypeError`/`ValueError` error paths |
 
 Each script writes its workbook to a temporary file, reads it back with
 `openpyxl` to prove it round-trips, prints a short summary, and exits 0.

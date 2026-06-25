@@ -20,6 +20,14 @@ project adheres to [Semantic Versioning](https://semver.org/).
   cells; `list[dict]` with differing/missing keys (union, first-seen
   order); large and negative `Decimal` amounts; `date` vs. `datetime`
   cells; and a custom `sheet_name` combined with a `summary=` sheet.
+- Sixth example, `06_value_coercion_and_errors.py`, exercising the value
+  coercion rules (`Decimal`→`float`, `date`/`datetime`, `None`/`NaN`/
+  missing keys → blank), the 60-character column-width cap, and the
+  `TypeError`/`ValueError` error paths end-to-end.
+- README now documents the exact 60-character column-width cap, the
+  `None`/`NaN`→blank coercion rule, and the `TypeError`/`ValueError`
+  error paths (with a runnable, regression-tested example). New
+  docs-accuracy tests pin these README claims to the code.
 
 ### Changed
 
