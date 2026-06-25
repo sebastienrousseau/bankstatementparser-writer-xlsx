@@ -89,8 +89,9 @@ accepts three input shapes and normalises each to a flat table:
 | `list[dict]` | the union of keys, in first-seen order |
 
 A header row (bold) is written to the `sheet_name` sheet, followed by
-one row per record. Columns are auto-sized to their widest cell (capped
-so wide descriptions don't run off-screen).
+one row per record. Columns are auto-sized to their widest cell, capped
+at **60 characters** so wide descriptions don't run off-screen (the cell
+content itself is never truncated — only the displayed column width).
 
 **Empty input** is accepted: an empty `list` writes an empty sheet (no
 header), while an empty `DataFrame` that still carries column labels
@@ -106,7 +107,36 @@ coerces the rich types the parser emits:
 | `decimal.Decimal` | `float` (Excel has no decimal type; floats aggregate natively) |
 | `datetime.date` / `datetime.datetime` | native Excel date cell (unchanged) |
 | `str`, `int`, `float`, `bool`, `None` | unchanged |
+| `None` / `float('nan')` (e.g. a missing DataFrame cell) | blank cell |
 | anything else | `str(value)` |
+
+`bool` is preserved as a true/false cell (it is *not* coerced to `0`/`1`),
+and a missing `list[dict]` key writes a blank cell in the same way a
+`None` value does.
+
+## Errors
+
+`write_xlsx` validates its `data` argument and fails fast with a precise
+exception rather than writing a malformed workbook:
+
+| Condition | Raised |
+| :--- | :--- |
+| `data` is neither a `DataFrame` nor a `list`/`tuple` (e.g. a `str` or `int`) | `TypeError` |
+| `data` is a non-empty sequence whose items are neither `dict` records nor `Transaction` objects (e.g. `[42]`) | `ValueError` |
+
+```python
+from bankstatementparser_writer_xlsx import write_xlsx
+
+try:
+    write_xlsx("not-a-table", "out.xlsx")  # a bare str is not a table
+except TypeError as exc:
+    print(f"rejected: {exc}")
+
+try:
+    write_xlsx([42], "out.xlsx")           # 42 is not a dict/Transaction
+except ValueError as exc:
+    print(f"rejected: {exc}")
+```
 
 ## The summary sheet
 
@@ -138,9 +168,9 @@ write_xlsx(
 
 ## Examples
 
-Five runnable examples live in [`examples/`](examples/) and are
+Six runnable examples live in [`examples/`](examples/) and are
 exercised in CI on every commit. Together they cover every supported
-input shape and option of `write_xlsx`:
+input shape, option, coercion rule, and error path of `write_xlsx`:
 
 - [`01_write_dataframe.py`](examples/01_write_dataframe.py) — write a
   pandas `DataFrame` to a single sheet.
@@ -152,6 +182,10 @@ input shape and option of `write_xlsx`:
   write a DataFrame plus a second `Summary` sheet via `summary=`.
 - [`05_custom_sheet_name.py`](examples/05_custom_sheet_name.py) — rename
   the transactions sheet with `sheet_name=`.
+- [`06_value_coercion_and_errors.py`](examples/06_value_coercion_and_errors.py)
+  — `Decimal`/`date` coercion, `None`/`NaN`/missing keys as blank cells,
+  the 60-character column-width cap, and the `TypeError`/`ValueError`
+  error paths.
 
 ## When not to use this package
 
