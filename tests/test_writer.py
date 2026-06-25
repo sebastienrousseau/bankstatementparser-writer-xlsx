@@ -61,7 +61,7 @@ def _transactions() -> list[Transaction]:
 def test_version_exposed() -> None:
     """The package exposes a non-empty semantic-style version string."""
     assert isinstance(__version__, str)
-    assert __version__ == "0.0.11"
+    assert __version__ == "0.0.12"
 
 
 def test_returns_path_and_writes_file(tmp_path: Path) -> None:

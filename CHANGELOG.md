@@ -5,6 +5,12 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.0.12] - 2026-06-25
+
+### Changed
+
+- **Audit pass.** Documented and exampled `NaN`->blank, the 60-char column-width cap, and the `TypeError`/`ValueError` paths (new `examples/06_value_coercion_and_errors.py`); added docs-accuracy guards.
+
 ## [0.0.11] - 2026-06-24
 
 ### Added
