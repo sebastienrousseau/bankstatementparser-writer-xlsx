@@ -51,14 +51,14 @@ yaml = ["PyYAML"]
 
 [[package]]
 name = "bankstatementparser"
-version = "0.0.9"
+version = "0.0.11"
 description = "BankStatementParser is your essential tool for easy bank statement management. Designed with finance and treasury experts in mind, it offers a simple way to handle CAMT (ISO 20022) formats and more. Get quick, accurate insights from your financial data and spend less time on processing. It's the smart, hassle-free way to stay on top of your transactions."
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "bankstatementparser-0.0.9-py3-none-any.whl", hash = "sha256:1ea2809d0262855e2ee6338bd8da191dd62173c0f8fbb17f53a1606dbbf143fd"},
-    {file = "bankstatementparser-0.0.9.tar.gz", hash = "sha256:39583590ba01e5922e82b17e7feb5d0f88fa6da0397eca1dd1d71796d649a628"},
+    {file = "bankstatementparser-0.0.11-py3-none-any.whl", hash = "sha256:cd637abcdebf515f08fe33146e2d96f65d8daa23dc276dc36ed1db470b9f58fd"},
+    {file = "bankstatementparser-0.0.11.tar.gz", hash = "sha256:65dbf565ff64a4a63decba037870d089c4fda6a2efa54714371c8390f45bf587"},
 ]
 
 [package.dependencies]
@@ -1667,4 +1667,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "96a451813889bc51ba0b80bb536ba2b6435c1ed5133e9e6990bd8a8bc764c056"
+content-hash = "cfb6bb76dab117bbc4cbda273a2fc42360df1a4daa6405b417fbb0a1a1beed75"

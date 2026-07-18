@@ -41,8 +41,10 @@ clean: ## Remove build artifacts and caches
 	find . -type f -name '*.pyc' -delete 2>/dev/null || true
 
 examples: ## Verify example scripts run
-	$(POETRY) run python examples/01_minimal_write.py
-	$(POETRY) run python examples/02_write_with_summary.py
+	@for f in examples/*.py; do \
+		echo "=== $$f ==="; \
+		$(POETRY) run python "$$f" || exit 1; \
+	done
 
 doc-coverage: ## Enforce the 100% docstring coverage gate
 	$(POETRY) run interrogate -c pyproject.toml -v bankstatementparser_writer_xlsx
