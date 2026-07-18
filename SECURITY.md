@@ -13,8 +13,8 @@ versions do not.
 
 | Version | Status | Receives security fixes? |
 | :--- | :--- | :--- |
-| `0.0.10` (latest) | Current | ✅ Yes |
-| _none yet_ | — | — |
+| `0.0.13` (latest) | Current | ✅ Yes |
+| `0.0.12` | Prior | ✅ Yes |
 
 ## Reporting a vulnerability
 
