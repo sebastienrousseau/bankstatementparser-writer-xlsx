@@ -17,6 +17,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -59,9 +60,28 @@ def _transactions() -> list[Transaction]:
 
 
 def test_version_exposed() -> None:
-    """The package exposes a non-empty semantic-style version string."""
+    """The package exposes a semantic version matching pyproject.toml.
+
+    Deliberately not a literal. Pinning the string means every release
+    fails this test until someone hand-edits the number -- churn that
+    checks nothing, because the value it should be compared against is
+    two files away, not in this one.
+    """
+    import sys
+    from pathlib import Path
+
+    if sys.version_info >= (3, 11):  # pragma: no cover - version dependent
+        import tomllib
+    else:  # pragma: no cover - version dependent
+        import tomli as tomllib
+
+    pyproject = Path(__file__).resolve().parent.parent / "pyproject.toml"
+    with pyproject.open("rb") as handle:
+        declared = tomllib.load(handle)["tool"]["poetry"]["version"]
+
     assert isinstance(__version__, str)
-    assert __version__ == "0.0.13"
+    assert re.fullmatch(r"\d+\.\d+\.\d+", __version__)
+    assert __version__ == declared
 
 
 def test_returns_path_and_writes_file(tmp_path: Path) -> None:
