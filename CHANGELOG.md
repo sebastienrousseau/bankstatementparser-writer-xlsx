@@ -5,6 +5,47 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.0.15] - 2026-08-29
+
+Brings this repository onto the **suite conformance gate**.
+
+### Added
+
+- **`benches/bench_write_xlsx.py`** — time is the less interesting half.
+  Writing xlsx means building the whole workbook in memory before
+  anything reaches disk, so **peak memory** is what decides whether a job
+  survives, and nothing was measuring it.
+
+  **Peak memory runs about 65x the size of the file written.** A 2.2 MB
+  workbook at 50,000 rows needs roughly **138 MB** of peak allocation.
+  That multiple is the number to budget a container against — the limit
+  has to clear the peak, not the output. It works on a laptop and gets
+  killed in a constrained container, which is exactly the failure a test
+  suite never sees.
+
+  Time is linear (`us/row` moves 1.19x between 100 and 50,000 rows), and
+  the accepted input shapes — a list of dicts and a DataFrame — are
+  measured side by side, since the docstring offers them as equivalent
+  and a caller holding one should be able to see whether converting is
+  worth it.
+
+  Nothing asserts a timing threshold — wall-clock is not comparable
+  between machines, and a flaky performance gate teaches people to ignore
+  red. CI runs `--quick`, so a benchmark that stops compiling fails the
+  build rather than rotting into a file that reads as verified.
+
+- **`tests/test_suite_conformance.py`** — invariants shared by every
+  repository in the suite, vendored from one canonical copy and
+  checksummed by its own test.
+
+### Changed
+
+- CI lints, formats and runs `benches/` alongside everything else.
+- `tomli` (on 3.10) and `packaging` are named as dev dependencies; the
+  conformance gate parses `pyproject.toml` and needs both.
+- `tests/test_suite_conformance.py` is excluded from black: it is
+  generated, and the suite uses three different line lengths.
+
 ## [0.0.14] - 2026-08-28
 
 ### Changed

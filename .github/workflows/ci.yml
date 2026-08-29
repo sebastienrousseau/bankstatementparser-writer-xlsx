@@ -39,6 +39,11 @@ jobs:
           # pyproject.toml, so a local `pytest` enforces exactly this.
           # Only the XML report is CI-specific.
           pytest tests/ --cov-report=xml -v
+          # Not a timing gate -- wall-clock is not comparable between
+          # runners. This proves the benchmark still runs against the
+          # current API rather than rotting into a file that reads as
+          # verified and is not.
+          python benches/bench_write_xlsx.py --quick
 
       - name: Enforce 100% docstring coverage
         run: interrogate -c pyproject.toml bankstatementparser_writer_xlsx
@@ -73,7 +78,7 @@ jobs:
         run: ruff check bankstatementparser_writer_xlsx/ tests/
 
       - name: Black check
-        run: black --check bankstatementparser_writer_xlsx/ tests/
+        run: black --check bankstatementparser_writer_xlsx/ tests/ benches/
 
       - name: Mypy
         run: mypy bankstatementparser_writer_xlsx/

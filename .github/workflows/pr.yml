@@ -28,7 +28,7 @@ jobs:
       - name: Lint
         run: |
           ruff check bankstatementparser_writer_xlsx/ tests/
-          black --check bankstatementparser_writer_xlsx/ tests/
+          black --check bankstatementparser_writer_xlsx/ tests/ benches/
 
       - name: Type check
         run: mypy bankstatementparser_writer_xlsx/
