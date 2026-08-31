@@ -18,7 +18,6 @@
 from __future__ import annotations
 
 import tempfile
-from decimal import Decimal
 from pathlib import Path
 
 from hypothesis import given, settings
@@ -27,7 +26,6 @@ from openpyxl.utils.exceptions import IllegalCharacterError
 
 from bankstatementparser_writer_xlsx.writer import (
     _coerce,
-    _normalise,
     write_xlsx,
 )
 
@@ -42,7 +40,12 @@ from bankstatementparser_writer_xlsx.writer import (
                 st.booleans(),
                 st.integers(-1000, 1000),
                 st.floats(allow_nan=False, allow_infinity=False),
-                st.decimals(min_value=-1000, max_value=1000, allow_nan=False, allow_infinity=False),
+                st.decimals(
+                    min_value=-1000,
+                    max_value=1000,
+                    allow_nan=False,
+                    allow_infinity=False,
+                ),
                 st.text(max_size=50),
             ),
             max_size=10,
@@ -103,7 +106,9 @@ def test_fuzz_write_xlsx_arbitrary_sheet_name(name: str) -> None:
 
 
 @settings(max_examples=50, deadline=None)
-@given(st.one_of(st.none(), st.booleans(), st.integers(), st.floats(), st.text()))
+@given(
+    st.one_of(st.none(), st.booleans(), st.integers(), st.floats(), st.text())
+)
 def test_fuzz_coerce_cell_value(val) -> None:
     """_coerce handles any primitive without raising."""
     res = _coerce(val)
