@@ -56,6 +56,8 @@ interrogate = "^1.7.0"
 # without the backport that test fails to import on the oldest
 # interpreter the package supports.
 tomli = { version = ">=2", python = "<3.11" }
+packaging = ">=23"
+hypothesis = ">=6.82,<7"
 
 [build-system]
 requires = ["poetry-core"]
