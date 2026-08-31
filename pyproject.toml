@@ -39,7 +39,7 @@ xlsx = "bankstatementparser_writer_xlsx.writer:write_xlsx"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-bankstatementparser = ">=0.0.19"
+bankstatementparser = ">=0.0.18"
 openpyxl = ">=3.1,<4"
 pandas = ">=2.0"
 
