@@ -5,6 +5,16 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.0.19] - 2026-08-31
+
+### Added
+
+- Registered `write_xlsx` under `bankstatementparser.writers` entrypoint.
+
+### Changed
+
+- Updated `bankstatementparser` dependency floor to `>=0.0.19`.
+
 ## [0.0.18] - 2026-08-29
 
 Aligns the `bankstatementparser` suite on one version number, and adds
@@ -181,3 +191,5 @@ the run, locally as well as in CI.
 
 [0.0.11]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.11
 [0.0.10]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.10
+
+[0.0.19]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.19
