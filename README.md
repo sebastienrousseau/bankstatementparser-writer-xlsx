@@ -23,6 +23,8 @@
   <a href="#license"><img src="https://img.shields.io/pypi/l/bankstatementparser-writer-xlsx?style=for-the-badge" alt="License" /></a>
 </p>
 
+> **Latest release: v0.0.19** — single `write_xlsx(data, path, ...)` function, 100% line + branch coverage, 100% docstring coverage, `mypy --strict` clean.
+
 ---
 
 ## Contents
