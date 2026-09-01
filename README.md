@@ -1,19 +1,29 @@
-# bankstatementparser-writer-xlsx: Excel writer for parsed bank statements
+<!-- SPDX-License-Identifier: Apache-2.0 OR MIT -->
 
-[![PyPI Version][pypi-badge]][pypi-url]
-[![Python Versions][python-versions-badge]][pypi-url]
-[![License][license-badge]][license-url]
-[![Coverage][coverage-badge]][ci-url]
+<p align="center">
+  <img
+    src="https://cloudcdn.pro/bankstatementparser/v1/logos/bankstatementparser.svg"
+    alt="bankstatementparser-writer-xlsx logo"
+    width="120"
+    height="120"
+  />
+</p>
 
-**An Excel `.xlsx` writer for data parsed by
-[`bankstatementparser`][core]** — turn parsed transactions (a pandas
-`DataFrame`, a list of `Transaction` objects, or a list of plain dicts)
-into a polished workbook that accountants, auditors, and reconciliation
-macros can open directly.
+<h1 align="center">bankstatementparser-writer-xlsx</h1>
 
-> **Latest release: v0.0.19** — single `write_xlsx(data, path, ...)`
-> function, 100% line + branch coverage, 100% docstring coverage,
-> `mypy --strict` clean.
+<p align="center">
+  <b>A polished Microsoft Excel (.xlsx) workbook export writer plugin for <code>bankstatementparser</code> transaction data.</b>
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/bankstatementparser-writer-xlsx/"><img src="https://img.shields.io/pypi/v/bankstatementparser-writer-xlsx?style=for-the-badge" alt="PyPI version" /></a>
+  <a href="https://pypi.org/project/bankstatementparser-writer-xlsx/"><img src="https://img.shields.io/pypi/pyversions/bankstatementparser-writer-xlsx.svg?style=for-the-badge" alt="Python versions" /></a>
+  <a href="https://pypi.org/project/bankstatementparser-writer-xlsx/"><img src="https://img.shields.io/pypi/dm/bankstatementparser-writer-xlsx.svg?style=for-the-badge" alt="PyPI downloads" /></a>
+  <a href="https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/sebastienrousseau/bankstatementparser-writer-xlsx/ci.yml?branch=main&label=Tests&style=for-the-badge" alt="Tests" /></a>
+  <a href="#license"><img src="https://img.shields.io/pypi/l/bankstatementparser-writer-xlsx?style=for-the-badge" alt="License" /></a>
+</p>
+
+---
 
 ## Contents
 
