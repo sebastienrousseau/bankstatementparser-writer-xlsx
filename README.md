@@ -23,7 +23,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-blue.svg?style=for-the-badge" alt="License: Apache-2.0 OR MIT" height="28" /></a>
 </p>
 
-> **Latest release: v0.0.28** — single `write_xlsx(data, path, ...)` function, 100% line + branch coverage, 100% docstring coverage, `mypy --strict` clean.
+> **Latest release: v0.0.29** — single `write_xlsx(data, path, ...)` function, 100% line + branch coverage, 100% docstring coverage, `mypy --strict` clean.
 
 ---
 
