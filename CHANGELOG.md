@@ -5,10 +5,12 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.0.32] - 2026-11-18
 
 ### Changed
 
+- Require `bankstatementparser >= 0.0.31`, the newest core release, and
+  align the version with the suite's 0.0.32 release.
 - Release notes are written by the release workflow. A final
   `release-notes` job runs after every asset is attached and rewrites
   the GitHub release in the suite's format: Highlights, What's Changed,
@@ -228,7 +230,7 @@ the run, locally as well as in CI.
   (`test_docs_accuracy.py`, `test_regression_docs.py`,
   `test_regression_examples.py`).
 
-[Unreleased]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/compare/v0.0.31...HEAD
+[0.0.32]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.32
 [0.0.31]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.31
 [0.0.30]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.30
 [0.0.28]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.28
