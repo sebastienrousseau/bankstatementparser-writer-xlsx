@@ -5,6 +5,12 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Release titles read `bankstatementparser-writer-xlsx <version>` instead of the bare tag.
+
 ## [0.0.30] - Unreleased
 
 ### Changed
