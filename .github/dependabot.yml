@@ -38,15 +38,3 @@ updates:
       github-actions:
         patterns:
           - "*"
-
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    reviewers:
-      - "sebastienrousseau"
-    labels:
-      - "dependencies"
-      - "docker"
-      - "automated"
