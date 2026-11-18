@@ -5,6 +5,24 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Release notes are written by the release workflow. A final
+  `release-notes` job runs after every asset is attached and rewrites
+  the GitHub release in the suite's format: Highlights, What's Changed,
+  New Contributors (when any), Checksums of every asset, and the Full
+  Changelog link. Until now the body was the CHANGELOG section,
+  with no Highlights or Checksums, so 0.0.31 had to be corrected by
+  hand. `softprops/action-gh-release` is no longer used.
+- The Highlights are the one hand-written part, kept in
+  `.github/releases/<tag>.md`. The build refuses to publish when that
+  file is missing, has fewer than 2 or more than 4
+  `* **Headline**: text` bullets, or contains an em dash.
+- `scripts/release_notes.py`, shared with every suite repository,
+  composes the body from the GitHub API and the downloaded assets.
+
 ## [0.0.31] - 2026-11-18
 
 ### Changed
@@ -210,6 +228,7 @@ the run, locally as well as in CI.
   (`test_docs_accuracy.py`, `test_regression_docs.py`,
   `test_regression_examples.py`).
 
+[Unreleased]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/compare/v0.0.31...HEAD
 [0.0.31]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.31
 [0.0.30]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.30
 [0.0.28]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.28
