@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bankstatementparser-writer-xlsx"
-version = "0.0.34"
+version = "0.0.35"
 description = "Excel (.xlsx) writer for bankstatementparser-parsed bank statements."
 authors = ["Sebastien Rousseau <sebastian.rousseau@gmail.com>"]
 license = "Apache-2.0 OR MIT"
