@@ -1,0 +1,15 @@
+{
+  "examples/06_value_coercion_and_errors.py::main": {
+    "cyclomatic": 12
+  },
+  "tests/test_suite_conformance.py": {
+    "file_lines": 678
+  },
+  "tests/test_suite_conformance.py::_dev_spec": {
+    "cognitive": 23,
+    "cyclomatic": 12
+  },
+  "tests/test_writer.py::test_custom_sheet_name_with_summary_second_sheet": {
+    "cyclomatic": 12
+  }
+}
