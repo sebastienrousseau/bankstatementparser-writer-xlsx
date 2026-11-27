@@ -59,6 +59,7 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
+from openpyxl.utils.exceptions import IllegalCharacterError
 
 __all__ = ["write_xlsx"]
 
@@ -130,18 +131,21 @@ def write_xlsx(
             records (and is not empty).
         ValueError: If ``data`` is a non-empty sequence whose items mix
             ``dict`` and non-``dict`` types, or contain an unsupported
-            item type.
+            item type; or if a value, a column name or the summary
+            holds a control character an ``.xlsx`` cannot store (C0
+            characters other than tab, newline and carriage return).
     """
     columns, rows = _normalise(data)
 
     workbook = Workbook()
     sheet = workbook.active
     sheet.title = sheet_name
-    _write_table(sheet, columns, rows)
-
-    if summary is not None:
-        summary_sheet = workbook.create_sheet("Summary")
-        _write_summary(summary_sheet, summary)
+    try:
+        _write_table(sheet, columns, rows)
+        if summary is not None:
+            _write_summary(workbook.create_sheet("Summary"), summary)
+    except IllegalCharacterError as exc:  # XML 1.0 cannot hold the text
+        raise ValueError(str(exc)) from exc
 
     output = Path(path)
     workbook.save(output)
