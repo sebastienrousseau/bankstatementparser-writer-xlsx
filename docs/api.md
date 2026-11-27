@@ -1,19 +1,11 @@
-# Python API reference
+# API reference
 
-The package's importable surface. The single public entry point is
-`write_xlsx`.
+The importable Python surface: `write_xlsx`, the package's one public
+function, which the core discovers through the
+`bankstatementparser.writers` entry point. Generated from the
+docstrings by mkdocstrings.
 
-```{eval-rst}
-.. automodule:: bankstatementparser_writer_xlsx
-   :members:
-   :undoc-members:
-```
-
-## Writer module
-
-```{eval-rst}
-.. automodule:: bankstatementparser_writer_xlsx.writer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-```
+::: bankstatementparser_writer_xlsx.writer
+    options:
+      members:
+        - write_xlsx
