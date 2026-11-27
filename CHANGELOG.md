@@ -7,11 +7,61 @@ project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [0.0.36] - 2026-11-27
 
+### Fixed
+
+- A value, column name or summary entry holding a control character an
+  `.xlsx` cannot store (C0 characters other than tab, newline and
+  carriage return) raised openpyxl's `IllegalCharacterError`, which is
+  not among the errors `write_xlsx` documents. It now raises
+  `ValueError` naming the text; nothing is altered silently.
+- `benches/bench_write_xlsx.py`'s docstring claimed to time a list of
+  `Transaction` objects; it times a list of dicts and a `DataFrame`.
+
+### Added
+
+- An Atheris fuzz target, `fuzz/fuzz_write_xlsx.py`, for `write_xlsx`
+  over fuzzed records, summaries and sheet names; it fails on any
+  exception but `TypeError` / `ValueError` and on a workbook that does
+  not reopen with one row per record. CI runs it for 120 s on every
+  change; `make fuzz` locally.
+- A MkDocs Material user manual (`mkdocs.yml`, `docs/`) with an
+  mkdocstrings API reference, built with `--strict` on every pull
+  request and deployed to GitHub Pages from `main`
+  (`.github/workflows/docs.yml`, `make docs`). It replaces a Sphinx
+  configuration that nothing built.
+- `docs/POLICIES.md`, `docs/BENCHMARKS.md` (a run of
+  `benches/bench_write_xlsx.py` with its environment),
+  `docs/COMPARISON.md`, `docs/format.md` and `docs/suite.md`.
+- Signed releases: keyless cosign `.sig` and `.pem` per distribution,
+  SLSA provenance
+  (`bankstatementparser-writer-xlsx-vX.Y.Z.intoto.jsonl`,
+  slsa-github-generator 2.1.0), CycloneDX and SPDX SBOMs and a licence
+  manifest on every GitHub release, and PEP 740 attestations on PyPI.
+- The OpenSSF Scorecard workflow, the suite's Docs Lint workflow
+  (`scripts/readme-check.sh` and markdownlint), a Security workflow
+  (Bandit and `pip-audit` on the locked sets), the portfolio pull
+  request template, and `.github/demo.gif` rendered by `make demo` from
+  `.github/demo.tape`.
+- Hash-pinned requirement sets exported from the lock
+  (`requirements/{runtime,ci,fuzz,docs}.txt`, by the suite's
+  `scripts/export_locked_requirements.py`) and compiled release tooling
+  (`requirements/{build,sbom}.txt`).
+
 ### Changed
 
 - Require `bankstatementparser >= 0.0.35`, the newest core release, and
   align the version with the suite's 0.0.36 release; `poetry.lock`
   moves core to 0.0.35.
+- CI pins every action by commit SHA, installs only the hashed lock
+  exports, and tests CPython 3.10 to 3.14 on Ubuntu, macOS and Windows.
+  Write permissions sit on the jobs that need them.
+- `README.md` follows the portfolio template and states the
+  Apache-2.0 OR MIT licence; the suite table moves to `docs/suite.md`.
+  `CODE-OF-CONDUCT.md` is now `CODE_OF_CONDUCT.md`, the issue templates
+  follow the suite kit, and `SECURITY.md`'s supported versions name
+  0.0.36 and 0.0.35.
+- `ROADMAP.md` no longer calls v0.0.10 current; `ARCHITECTURE.md` lists
+  every module and tool.
 
 ## [0.0.35] - 2026-11-26
 
