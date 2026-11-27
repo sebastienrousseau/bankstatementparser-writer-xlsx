@@ -8,7 +8,7 @@ prior context.
 
 ## The pipeline
 
-```
+```text
 bankstatementparser parser (.parse() / .get_summary())
         |  DataFrame / list[Transaction] / list[dict]   +   summary mapping
         v

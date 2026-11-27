@@ -14,7 +14,7 @@ body:
     id: bankstatementparser_version
     attributes:
       label: bankstatementparser Version
-      placeholder: "0.0.9"
+      placeholder: "0.0.10"
     validations:
       required: true
   - type: dropdown
@@ -26,17 +26,7 @@ body:
         - "3.11"
         - "3.12"
         - "3.13"
-    validations:
-      required: true
-  - type: dropdown
-    id: input_shape
-    attributes:
-      label: Input Shape
-      options:
-        - pandas DataFrame
-        - list[Transaction]
-        - list[dict]
-        - Other
+        - "3.14"
     validations:
       required: true
   - type: dropdown
@@ -57,24 +47,25 @@ body:
     validations:
       required: true
   - type: textarea
-    id: call
+    id: document
     attributes:
-      label: Call
+      label: Input And Call
       description: |
-        The write_xlsx() call and a minimal sample of the input data
-        (redact any sensitive IBAN/BIC values - placeholder data is fine).
+        The smallest data and write_xlsx call that show the problem
+        (redact any sensitive account numbers or balances - placeholder
+        data is fine).
       render: python
     validations:
       required: true
   - type: textarea
     id: error_output
     attributes:
-      label: Error Output
-      description: The full traceback returned.
+      label: Output Or Error
+      description: What the workbook contained (or should have), or the stack trace.
     validations:
       required: true
   - type: textarea
     id: extra
     attributes:
       label: Anything Else
-      description: Logs, environment details, etc.
+      description: Logs, the spreadsheet application and version you opened it in, etc.
