@@ -18,10 +18,11 @@ Three things are measured:
 * **Peak memory**, and the ratio of peak to the size of the file finally
   written. That multiple is the real cost: it says how much headroom a
   process needs relative to the output it produces.
-* **The three accepted input shapes** — a list of dicts, a DataFrame, and
-  a list of ``Transaction`` objects — on the same data. The docstring
-  offers all three as equivalent, and a caller with a DataFrame in hand
-  should know whether converting it first would be cheaper or dearer.
+* **Two of the three accepted input shapes** — a list of dicts and a
+  DataFrame — on the same data (a list of ``Transaction`` objects is
+  not timed here). The docstring offers them as equivalent, and a
+  caller with a DataFrame in hand should know whether converting it
+  first would be cheaper or dearer.
 
 Run::
 

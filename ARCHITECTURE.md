@@ -8,7 +8,7 @@ prior context.
 
 ## The pipeline
 
-```
+```text
 bankstatementparser parser (.parse() / .get_summary())
         |  DataFrame / list[Transaction] / list[dict]   +   summary mapping
         v
@@ -30,9 +30,12 @@ network I/O.
 | :--- | :--- | :--- |
 | **Public API** | `bankstatementparser_writer_xlsx/writer.py` | `write_xlsx()` plus private normalisation, coercion, and layout helpers |
 | **Package surface** | `bankstatementparser_writer_xlsx/__init__.py` | Re-exports `write_xlsx`; single source of truth for `__version__` |
-| **Tests** | `tests/test_writer.py` | Round-trips every input shape and reads the workbook back with `openpyxl.load_workbook` |
-| **Examples** | `examples/` | One runnable script per usage shape (minimal write, write-with-summary) |
-| **Release helpers** | `scripts/verify_versions.py` | Asserts `__version__`, `pyproject.toml`, and `CHANGELOG.md` agree |
+| **Tests** | `tests/` | Round-trips every input shape and reads the workbook back with `openpyxl.load_workbook` (`test_writer.py`), refuses text an `.xlsx` cannot hold (`test_illegal_characters.py`), Hypothesis properties (`test_fuzz.py`), docs and examples accuracy, release notes, and the shared suite conformance gate |
+| **Fuzzing** | `fuzz/fuzz_write_xlsx.py` | Atheris target for `write_xlsx`, run by the CI `Fuzz` job |
+| **Benchmarks** | `benches/bench_write_xlsx.py` | Time and peak memory as the row count grows; `--quick` runs in CI |
+| **Examples** | `examples/` | Six runnable scripts, one per input shape, option and error path |
+| **Manual** | `mkdocs.yml`, `docs/` | The MkDocs Material user manual and API reference, deployed to GitHub Pages |
+| **Release helpers** | `scripts/` | `verify_versions.py` (`__version__`, `pyproject.toml` and `CHANGELOG.md` agree), `release_notes.py` (release body), `export_locked_requirements.py` (hashed exports of `poetry.lock`), `check_complexity.py` (complexity baseline), `check_suite_consistency.py` (published suite agrees), `readme-check.sh` (README template) |
 
 ## How `write_xlsx` works
 

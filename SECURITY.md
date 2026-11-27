@@ -13,8 +13,8 @@ versions do not.
 
 | Version | Status | Receives security fixes? |
 | :--- | :--- | :--- |
-| `0.0.18` (latest) | Current | ✅ Yes |
-| `0.0.13` | Prior | ✅ Yes |
+| `0.0.36` (latest) | Current | ✅ Yes |
+| `0.0.35` | Prior | ✅ Yes |
 
 ## Reporting a vulnerability
 
@@ -49,7 +49,7 @@ upstream security control; this package is a thin output adapter.
 | :--- | :--- |
 | **Untrusted statement files (PDF / CSV / XML)** | Out of scope. Input is already-parsed data, not raw files. The `bankstatementparser` core handles input parsing, validation, and zip/XML defence-in-depth. |
 | **Path traversal** | The `path` argument is treated as a writer target. Callers must validate the path before invoking the writer. `openpyxl.save()` writes only to the supplied path. |
-| **Formula injection** | All cell values are written as plain strings, numbers, dates, or booleans via `sheet.append([...])`. No formulas are constructed from input. |
+| **Formula injection (CWE-1236)** | Every `str` (values, column names, summary keys and values) is written as a plain string cell with its text unchanged, so input that starts with `=` is never stored as a formula; `tests/test_formula_injection.py` reads workbooks back to check it. Before 0.0.36 openpyxl stored such text as a live formula. Numbers, dates and booleans are written as native cells. The writer builds no formulas of its own. |
 | **Dependency CVEs** | `bankstatementparser >= 0.0.9`, `openpyxl >= 3.1, < 4`, and `pandas >= 2.0` are the direct deps, audited by GitHub Dependabot. |
 
 ### Cryptography status
