@@ -5,6 +5,14 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.0.36] - 2026-11-27
+
+### Changed
+
+- Require `bankstatementparser >= 0.0.35`, the newest core release, and
+  align the version with the suite's 0.0.36 release; `poetry.lock`
+  moves core to 0.0.35.
+
 ## [0.0.35] - 2026-11-26
 
 ### Added
@@ -265,6 +273,7 @@ the run, locally as well as in CI.
   (`test_docs_accuracy.py`, `test_regression_docs.py`,
   `test_regression_examples.py`).
 
+[0.0.36]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.36
 [0.0.35]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.35
 [0.0.34]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.34
 [0.0.33]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.33
