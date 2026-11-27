@@ -304,12 +304,30 @@ def _write_table(
     """
     if not columns:
         return
-    sheet.append(columns)
+    _append(sheet, columns)
     for cell in sheet[1]:
         cell.font = Font(bold=True)
     for row in rows:
-        sheet.append(row)
+        _append(sheet, row)
     _autosize(sheet, columns, rows)
+
+
+def _append(sheet: Any, values: list[Any]) -> None:
+    """Append one row, keeping every ``str`` a plain string cell.
+
+    openpyxl stores a ``str`` that starts with ``=`` as a formula. Bank
+    free text is partly chosen by whoever sent the payment, so no text
+    may become a live formula (CWE-1236): such cells are set back to
+    string cells, with the text unchanged.
+
+    Args:
+        sheet: The target openpyxl worksheet.
+        values: The cell values of the row, in column order.
+    """
+    sheet.append(values)
+    for cell in sheet[sheet.max_row]:
+        if isinstance(cell.value, str) and cell.data_type == "f":
+            cell.data_type = "s"
 
 
 def _write_summary(sheet: Any, summary: Mapping[str, Any]) -> None:
@@ -320,12 +338,12 @@ def _write_summary(sheet: Any, summary: Mapping[str, Any]) -> None:
         summary: The mapping to serialise, one row per item under a
             bold ``Key``/``Value`` header.
     """
-    sheet.append(["Key", "Value"])
+    _append(sheet, ["Key", "Value"])
     for cell in sheet[1]:
         cell.font = Font(bold=True)
     keys = list(summary)
     for key in keys:
-        sheet.append([str(key), _coerce(summary[key])])
+        _append(sheet, [str(key), _coerce(summary[key])])
     _autosize(
         sheet,
         ["Key", "Value"],

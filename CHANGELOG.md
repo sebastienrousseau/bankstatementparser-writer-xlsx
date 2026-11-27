@@ -7,6 +7,16 @@ project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [0.0.36] - 2026-11-27
 
+### Security
+
+- Spreadsheet formula injection (CWE-1236): openpyxl stores any `str`
+  that starts with `=` as a formula, so a transaction description such
+  as `=HYPERLINK("http://x","click")`, which a payer can partly choose,
+  became a live formula in the exported workbook. Every string (values,
+  column names, summary keys and values) is now written as a plain text
+  cell with its text unchanged. `SECURITY.md`'s threat model claimed
+  this already held; it now states the real guarantee.
+
 ### Fixed
 
 - A value, column name or summary entry holding a control character an

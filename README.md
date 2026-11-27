@@ -220,6 +220,11 @@ coerces the rich types the parser emits:
 and a missing `list[dict]` key writes a blank cell in the same way a
 `None` value does.
 
+Every string (values, column names and the summary) is written as a
+text cell holding exactly the original text: one that starts with `=`
+is never stored as a formula, so a crafted transaction description
+cannot become a live formula in the workbook (CWE-1236).
+
 ### Errors
 
 `write_xlsx` validates its `data` argument and fails fast with a precise
@@ -330,6 +335,7 @@ make check
 ## Security
 
 - **Parsed data only.** The writer consumes already-parsed records, not raw statement files; the PDF / CSV / XML parsing surface lives upstream in the [`bankstatementparser`](https://github.com/sebastienrousseau/bankstatementparser) core.
+- **No formula injection.** Every string is written as a text cell, never a formula, so bank free text starting with `=` stays text (CWE-1236); `tests/test_formula_injection.py` reads the workbooks back to check it.
 - **Writes only the path you give it.** `write_xlsx` creates or overwrites the one `.xlsx` at `path`; validate that path before calling it. No network, no code execution.
 - **Fuzzing.** `fuzz/fuzz_write_xlsx.py` drives `write_xlsx` with Atheris in CI over fuzzed records, summaries and sheet names, and fails on any exception other than `TypeError` / `ValueError` and on a workbook that does not reopen with one row per record.
 - **Supply chain.** Dependencies are locked in `poetry.lock`, CI installs hash-pinned exports of it, and `pip-audit` and CodeQL run on every change. Releases publish to PyPI through OIDC trusted publishing and carry cosign signatures, SLSA provenance and SBOMs; every workflow action is pinned by commit SHA except the SLSA generator, which must be referenced by tag.
