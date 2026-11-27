@@ -5,6 +5,14 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- CI: four pinned actions move to their latest releases:
+  codeql-action 4.39.5, markdownlint-cli2-action 25.1.0,
+  cosign-installer 4.1.4 and sbom-action 0.24.4.
+
 ## [0.0.36] - 2026-11-27
 
 ### Security
