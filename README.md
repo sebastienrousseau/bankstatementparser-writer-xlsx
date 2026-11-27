@@ -1,72 +1,96 @@
 <!-- SPDX-License-Identifier: Apache-2.0 OR MIT -->
 
 <p align="center">
-  <img
-    src="https://cloudcdn.pro/bankstatementparser/v1/logos/bankstatementparser.svg"
-    alt="bankstatementparser-writer-xlsx logo"
-    width="120"
-    height="120"
-  />
+  <img src="https://cloudcdn.pro/bankstatementparser/v1/logos/bankstatementparser.svg" alt="bankstatementparser-writer-xlsx logo" width="128" />
 </p>
 
 <h1 align="center">bankstatementparser-writer-xlsx</h1>
 
 <p align="center">
-  <b>A polished Microsoft Excel (.xlsx) workbook export writer plugin for <code>bankstatementparser</code> transaction data.</b>
+  Excel (.xlsx) writer for bankstatementparser-parsed bank statements: a bold header, one row per transaction, auto-sized columns and an optional summary sheet.
 </p>
 
 <p align="center">
-  <a href="https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/sebastienrousseau/bankstatementparser-writer-xlsx/ci.yml?branch=main&label=Tests&style=for-the-badge&logo=github" alt="Tests" height="28" /></a>
-  <a href="https://pypi.org/project/bankstatementparser-writer-xlsx/"><img src="https://img.shields.io/pypi/v/bankstatementparser-writer-xlsx?style=for-the-badge&color=fc8d62&logo=python" alt="PyPI version" height="28" /></a>
-  <a href="https://pypi.org/project/bankstatementparser-writer-xlsx/"><img src="https://img.shields.io/pypi/pyversions/bankstatementparser-writer-xlsx.svg?style=for-the-badge" alt="Python versions" height="28" /></a>
-  <a href="https://pypi.org/project/bankstatementparser-writer-xlsx/"><img src="https://img.shields.io/pypi/dm/bankstatementparser-writer-xlsx.svg?style=for-the-badge" alt="PyPI downloads" height="28" /></a>
+  <a href="https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/actions"><img src="https://img.shields.io/github/actions/workflow/status/sebastienrousseau/bankstatementparser-writer-xlsx/ci.yml?style=for-the-badge&logo=github" alt="Build" height="28" /></a>
+  <a href="https://pypi.org/project/bankstatementparser-writer-xlsx/"><img src="https://img.shields.io/pypi/v/bankstatementparser-writer-xlsx?style=for-the-badge&color=fc8d62&logo=python" alt="Registry" height="28" /></a>
+  <a href="https://sebastienrousseau.com/bankstatementparser-writer-xlsx/"><img src="https://img.shields.io/badge/docs-user%20manual-0a7bbb?style=for-the-badge&labelColor=555555&logo=materialformkdocs" alt="Docs" height="28" /></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/sebastienrousseau/bankstatementparser-writer-xlsx"><img src="https://img.shields.io/ossf-scorecard/github.com/sebastienrousseau/bankstatementparser-writer-xlsx?style=for-the-badge&label=OpenSSF%20Scorecard&logo=openssf" alt="OpenSSF Scorecard" height="28" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-blue.svg?style=for-the-badge" alt="License: Apache-2.0 OR MIT" height="28" /></a>
+  <a href="https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/blob/main/docs/POLICIES.md"><img src="https://img.shields.io/badge/python-3.10%2B-93450a.svg?style=for-the-badge&logo=python" alt="Python 3.10+" height="28" /></a>
 </p>
 
-> **Latest release: v0.0.36** — single `write_xlsx(data, path, ...)` function, 100% line + branch coverage, 100% docstring coverage, `mypy --strict` clean.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/sebastienrousseau/bankstatementparser-writer-xlsx/main/.github/demo.gif" alt="A terminal printing bankstatementparser-writer-xlsx 0.0.36, then the 02_write_transactions.py, 04_write_with_summary.py and 06_value_coercion_and_errors.py examples writing workbooks, reading them back and showing the coercion rules and error paths" width="100%" />
+</p>
 
 ---
 
 ## Contents
 
-- [Overview](#overview)
-- [Install](#install)
-- [Quick start](#quick-start)
-- [Input shapes](#input-shapes)
-- [Value coercion](#value-coercion)
-- [The summary sheet](#the-summary-sheet)
-- [Examples](#examples)
-- [When not to use this package](#when-not-to-use-this-package)
-- [Development](#development)
-- [Security](#security)
-- [Documentation](#documentation)
+**Getting started**
+
+- [Install](#install): PyPI, source
+- [Requirements](#requirements): toolchain floor, platforms
+- [Quick Start](#quick-start): parse a statement, write a workbook
+
+**The bankstatementparser-writer-xlsx ecosystem**
+
+- [The bankstatementparser-writer-xlsx ecosystem](#the-bankstatementparser-writer-xlsx-ecosystem): the core library, the loaders and other writers
+
+**Library reference**
+
+- [Capabilities at a glance](#capabilities-at-a-glance): the current surface by theme
+- [Ecosystem comparison](#ecosystem-comparison): short matrix; full table at [`docs/COMPARISON.md`](docs/COMPARISON.md)
+- [Benchmarks](#benchmarks): headline numbers; full table at [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md)
+- [Features](#features): input shapes, value coercion, errors, the summary sheet
+- [Configuration](#configuration): core options
+- [Examples](#examples): runnable example index
+
+**Operational**
+
+- [When not to use bankstatementparser-writer-xlsx](#when-not-to-use-bankstatementparser-writer-xlsx): limitations
+- [Development](#development): make targets, fuzzing, CI
+- [Security](#security): guarantees and compliance
+- [Documentation](#documentation): all reference docs
+- [Stability guarantees](#stability-guarantees): SemVer axis, output stability, minimum toolchain discipline
 - [License](#license)
-- [Contributing](#contributing)
-- [Acknowledgements](#acknowledgements)
 
-## Overview
-
-`bankstatementparser-writer-xlsx` is a small, focused companion to the
-[`bankstatementparser`][core] library. It does one thing well: given
-already-parsed bank-statement records, write a clean Excel workbook with
-a bold header row, one row per transaction, auto-sized columns, and an
-optional second `Summary` sheet.
-
-The package consumes _parsed_ data — it does not read PDFs, CSVs, or
-XML itself. Parsing (and the security surface that comes with untrusted
-input) lives upstream in the [`bankstatementparser`][core] core.
+---
 
 ## Install
 
-`bankstatementparser-writer-xlsx` runs on macOS, Linux, and Windows and
-requires **Python 3.10+**. It pulls in `bankstatementparser`,
-`openpyxl`, and `pandas` automatically.
+### As a Python library
 
 ```bash
 pip install bankstatementparser-writer-xlsx
 ```
 
-## Quick start
+That installs the writer and pulls in `bankstatementparser >= 0.0.35`, `openpyxl` and `pandas` automatically.
+
+| Channel | Command | Notes |
+| :--- | :--- | :--- |
+| PyPI | `pip install bankstatementparser-writer-xlsx` | Pulls in `bankstatementparser`, `openpyxl` 3.1 or later on 3.x, and `pandas` 2.0 or later |
+| Source | `git clone https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx && cd bankstatementparser-writer-xlsx && poetry install` | For development |
+
+Verify the installation:
+
+```sh
+python -c "import bankstatementparser_writer_xlsx as w; print(w.__version__)"
+# -> 0.0.36
+```
+
+---
+
+## Requirements
+
+- **Python 3.10 or later.** CI tests CPython 3.10, 3.11, 3.12, 3.13 and 3.14 on Linux, macOS and Windows; [`docs/POLICIES.md`](docs/POLICIES.md) says when the floor moves.
+- **[`bankstatementparser`](https://pypi.org/project/bankstatementparser/) 0.0.35 or later**, whose parsers produce the `DataFrame` and `Transaction` objects the writer takes.
+- **[`openpyxl`](https://openpyxl.readthedocs.io/) 3.1 or later on 3.x**, which writes the workbook, and **`pandas` 2.0 or later**.
+- No network access, native extensions or system packages of its own.
+
+---
+
+## Quick Start
 
 ```python
 from bankstatementparser import CsvStatementParser
@@ -89,7 +113,77 @@ df = parser.parse()
 write_xlsx(df, "statement.xlsx", summary=parser.get_summary())
 ```
 
-## Input shapes
+Latest release: v0.0.36, a single `write_xlsx(data, path, ...)` function.
+
+---
+
+## The bankstatementparser-writer-xlsx ecosystem
+
+bankstatementparser-writer-xlsx is one of the output writers of the `bankstatementparser` suite, whose packages ship one version together. The full table is in [The suite](docs/suite.md).
+
+| Component | Purpose | Use case |
+| :--- | :--- | :--- |
+| [`bankstatementparser`](https://github.com/sebastienrousseau/bankstatementparser) | The parser core: CAMT, pain.001, CSV, OFX, QFX, MT940, MT942, BAI2 and PDF statements, and the `Transaction` model | Parsing statements from Python or the CLI |
+| **`bankstatementparser-writer-xlsx`** | This writer: parsed records to an `.xlsx` workbook | Handing statements to people who work in Excel |
+| Other writers | QIF, OFX and SWIFT MT940 / MT942 | Feeding accounting software and banks |
+| Loaders and transport | BAI2, MT942, CFONB 120, CAMT.054, SEPA and BACS loaders; EBICS retrieval | Formats beyond the core, and fetching statements |
+| [`bankstatementparser-mcp`](https://github.com/sebastienrousseau/bankstatementparser-mcp), [`bankstatementparser-lsp`](https://github.com/sebastienrousseau/bankstatementparser-lsp) | Agent tools and editor diagnostics over the core | AI agents and MT940 editing |
+
+```mermaid
+flowchart LR
+    A["bankstatementparser parser"] -->|DataFrame / list of Transaction| B["write_xlsx"]
+    C["list of dict"] --> B
+    B --> D["statement.xlsx: Transactions sheet"]
+    B -->|summary=| E["Summary sheet"]
+```
+
+---
+
+## Capabilities at a glance
+
+| Area | Capability | Status |
+| :--- | :--- | :--- |
+| Input | `DataFrame`, `list[Transaction]`, `list[dict]` | Shipped |
+| Values | `Decimal` as numbers, native date cells, blanks for `None` / `NaN` / missing keys | Shipped |
+| Layout | Bold header, columns auto-sized and capped at 60 characters, custom sheet name | Shipped |
+| Summary | `summary=` mapping written to a `Summary` sheet | Shipped |
+| Core integration | Registered as the `xlsx` entry point in `bankstatementparser.writers` | Shipped |
+| Number formats, frozen header, auto-filter | Formatting polish | Planned ([roadmap](ROADMAP.md)) |
+
+---
+
+## Ecosystem comparison
+
+The usual alternative is pandas' own `DataFrame.to_excel`. Every cell comes from writing the same frame with both and reading the workbooks back with openpyxl.
+
+| Project | Input shapes | `Decimal` amounts | Column widths |
+| :--- | :---: | :---: | :---: |
+| **bankstatementparser-writer-xlsx** | `DataFrame`, `Transaction`, `dict` | Number cells | Auto-sized, capped |
+| `pandas.DataFrame.to_excel` (2.3.3) | `DataFrame` | Text cells | Default |
+
+See [`docs/COMPARISON.md`](docs/COMPARISON.md) for the evidence and complete matrix.
+
+---
+
+## Benchmarks
+
+`benches/bench_write_xlsx.py` times `write_xlsx` and measures its peak memory, which decides whether an export survives a container limit: the whole workbook is built in memory before anything reaches disk. Time per row is flat from 100 to 50,000 rows, and peak memory runs at up to 65x the size of the file written.
+
+| Scenario | Result | Environment |
+| :--- | ---: | :--- |
+| 10,000 rows (445 KiB written) | 2,957 ms, 29,021 KiB peak | Apple M1 Pro, macOS 27.2.1, CPython 3.12.16 |
+| 50,000 rows (2,213 KiB written) | 15,156 ms, 141,630 KiB peak | Apple M1 Pro, macOS 27.2.1, CPython 3.12.16 |
+| 1,000 rows, `list[dict]` vs `DataFrame` | 283.9 ms vs 289.8 ms | Apple M1 Pro, macOS 27.2.1, CPython 3.12.16 |
+
+See [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md) for methodology and full results.
+
+---
+
+## Features
+
+<!-- --8<-- [start:features] -->
+
+### Input shapes
 
 `write_xlsx(data, path, *, sheet_name="Transactions", summary=None)`
 accepts three input shapes and normalises each to a flat table:
@@ -103,13 +197,13 @@ accepts three input shapes and normalises each to a flat table:
 A header row (bold) is written to the `sheet_name` sheet, followed by
 one row per record. Columns are auto-sized to their widest cell, capped
 at **60 characters** so wide descriptions don't run off-screen (the cell
-content itself is never truncated — only the displayed column width).
+content itself is never truncated; only the displayed column width).
 
 **Empty input** is accepted: an empty `list` writes an empty sheet (no
 header), while an empty `DataFrame` that still carries column labels
 writes a header-only sheet.
 
-## Value coercion
+### Value coercion
 
 Spreadsheet cells can't hold arbitrary Python objects, so the writer
 coerces the rich types the parser emits:
@@ -126,7 +220,7 @@ coerces the rich types the parser emits:
 and a missing `list[dict]` key writes a blank cell in the same way a
 `None` value does.
 
-## Errors
+### Errors
 
 `write_xlsx` validates its `data` argument and fails fast with a precise
 exception rather than writing a malformed workbook:
@@ -135,6 +229,7 @@ exception rather than writing a malformed workbook:
 | :--- | :--- |
 | `data` is neither a `DataFrame` nor a `list`/`tuple` (e.g. a `str` or `int`) | `TypeError` |
 | `data` is a non-empty sequence whose items are neither `dict` records nor `Transaction` objects (e.g. `[42]`) | `ValueError` |
+| A value, a column name or the summary holds a control character an `.xlsx` cannot store (C0 characters other than tab, newline and carriage return) | `ValueError` |
 
 ```python
 from bankstatementparser_writer_xlsx import write_xlsx
@@ -150,7 +245,7 @@ except ValueError as exc:
     print(f"rejected: {exc}")
 ```
 
-## The summary sheet
+### The summary sheet
 
 If you pass `summary=` a mapping (for example a parser's
 `get_summary()` result), the writer adds a second sheet titled
@@ -178,112 +273,92 @@ write_xlsx(
 )
 ```
 
+<!-- --8<-- [end:features] -->
+
+---
+
+## Configuration
+
+`write_xlsx` has two options, both keyword-only: `sheet_name` (the title of the transactions sheet, `"Transactions"` by default) and `summary` (a mapping for the optional `Summary` sheet). There is no configuration file and no environment variable. Installing the package registers `write_xlsx` under the `xlsx` name in the `bankstatementparser.writers` entry-point group, which is how the core discovers it.
+
+---
+
 ## Examples
 
-Six runnable examples live in [`examples/`](examples/) and are
-exercised in CI on every commit. Together they cover every supported
-input shape, option, coercion rule, and error path of `write_xlsx`:
+Six runnable examples live in [`examples/`](examples/) and are exercised in CI on every commit. Together they cover every supported input shape, option, coercion rule, and error path of `write_xlsx`:
 
-- [`01_write_dataframe.py`](examples/01_write_dataframe.py) — write a
-  pandas `DataFrame` to a single sheet.
-- [`02_write_transactions.py`](examples/02_write_transactions.py) —
-  write a list of `Transaction` objects in stable field order.
-- [`03_write_dicts.py`](examples/03_write_dicts.py) — write a list of
-  plain `dict` records (union of keys).
-- [`04_write_with_summary.py`](examples/04_write_with_summary.py) —
-  write a DataFrame plus a second `Summary` sheet via `summary=`.
-- [`05_custom_sheet_name.py`](examples/05_custom_sheet_name.py) — rename
-  the transactions sheet with `sheet_name=`.
-- [`06_value_coercion_and_errors.py`](examples/06_value_coercion_and_errors.py)
-  — `Decimal`/`date` coercion, `None`/`NaN`/missing keys as blank cells,
-  the 60-character column-width cap, and the `TypeError`/`ValueError`
-  error paths.
+| Example | Demonstrates |
+| :--- | :--- |
+| [`01_write_dataframe.py`](examples/01_write_dataframe.py) | A pandas `DataFrame` to a single sheet |
+| [`02_write_transactions.py`](examples/02_write_transactions.py) | A list of `Transaction` objects in stable field order |
+| [`03_write_dicts.py`](examples/03_write_dicts.py) | A list of plain `dict` records (union of keys) |
+| [`04_write_with_summary.py`](examples/04_write_with_summary.py) | A DataFrame plus a second `Summary` sheet via `summary=` |
+| [`05_custom_sheet_name.py`](examples/05_custom_sheet_name.py) | Renaming the transactions sheet with `sheet_name=` |
+| [`06_value_coercion_and_errors.py`](examples/06_value_coercion_and_errors.py) | `Decimal`/`date` coercion, `None`/`NaN`/missing keys as blank cells, the 60-character column-width cap, and the `TypeError`/`ValueError` error paths |
 
-## When not to use this package
+Each writes to a temporary file, reads it back with `openpyxl` and leaves nothing behind:
 
-- **You need a custom sheet layout.** The single-sheet (+ optional
-  Summary) structure is intentionally simple. Compose your own
-  `openpyxl` workbook if you need pivot-ready, multi-sheet layouts.
-- **You need `.xls` (legacy binary).** `openpyxl` writes `.xlsx` only;
-  convert downstream if you must.
-- **You need encrypted output.** Out of scope; encrypt the produced
-  `.xlsx` downstream with a tool like `msoffcrypto-tool`.
-- **You want to _read_ Excel.** This package is a writer.
+```sh
+python examples/04_write_with_summary.py
+```
+
+---
+
+## When not to use bankstatementparser-writer-xlsx
+
+- **You need a custom sheet layout.** The single-sheet (+ optional Summary) structure is intentionally simple. Compose your own `openpyxl` workbook if you need pivot-ready, multi-sheet layouts.
+- **You need `.xls` (legacy binary).** `openpyxl` writes `.xlsx` only; convert downstream if you must.
+- **You need encrypted or signed output.** Out of scope; encrypt or sign the produced `.xlsx` downstream with a tool like `msoffcrypto-tool`.
+- **You want to *read* Excel.** This package is a writer.
+- **You export far more rows than memory allows.** The whole workbook is built in memory first (see [Benchmarks](#benchmarks)); streaming writes are on the [roadmap](ROADMAP.md).
+
+---
 
 ## Development
 
 ```bash
-git clone https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx
+git clone https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx.git
 cd bankstatementparser-writer-xlsx
-poetry env use python3.12
 poetry install
-poetry run pytest        # 100% line + branch coverage gate
-poetry run ruff check bankstatementparser_writer_xlsx tests
-poetry run mypy bankstatementparser_writer_xlsx
-poetry run interrogate -c pyproject.toml bankstatementparser_writer_xlsx
+make check
 ```
+
+`make check` runs the local gates: `ruff` and `black`, `mypy --strict`, the complexity baseline (`scripts/check_complexity.py`), `pytest` with a 100% line + branch coverage floor, `interrogate` at 100% docstring coverage, and the examples. Other targets: `make fuzz` (Atheris, 60 s, Linux x86_64 with Python 3.12+), `make docs` (the MkDocs manual, `--strict`) and `make demo` (re-renders the GIF above with VHS from `.github/demo.tape`). CI adds the OS by Python matrix, the fuzz run, CodeQL, `pip-audit` on the locked requirements and the Docs Lint gates. Documentation and example regression tests ([`tests/test_docs_accuracy.py`](tests/test_docs_accuracy.py), [`tests/test_regression_docs.py`](tests/test_regression_docs.py), [`tests/test_regression_examples.py`](tests/test_regression_examples.py)) execute every documented snippet and every `examples/*.py` script. [`CONTRIBUTING.md`](CONTRIBUTING.md) covers branches and commit signing.
+
+---
 
 ## Security
 
-`bankstatementparser-writer-xlsx` consumes already-parsed data, not raw
-statement files — the PDF/CSV/XML parsing surface lives upstream in the
-[`bankstatementparser`][core] core. Reporting practice, supported
-versions, and supply-chain posture are documented in
-[`SECURITY.md`](SECURITY.md).
+- **Parsed data only.** The writer consumes already-parsed records, not raw statement files; the PDF / CSV / XML parsing surface lives upstream in the [`bankstatementparser`](https://github.com/sebastienrousseau/bankstatementparser) core.
+- **Writes only the path you give it.** `write_xlsx` creates or overwrites the one `.xlsx` at `path`; validate that path before calling it. No network, no code execution.
+- **Fuzzing.** `fuzz/fuzz_write_xlsx.py` drives `write_xlsx` with Atheris in CI over fuzzed records, summaries and sheet names, and fails on any exception other than `TypeError` / `ValueError` and on a workbook that does not reopen with one row per record.
+- **Supply chain.** Dependencies are locked in `poetry.lock`, CI installs hash-pinned exports of it, and `pip-audit` and CodeQL run on every change. Releases publish to PyPI through OIDC trusted publishing and carry cosign signatures, SLSA provenance and SBOMs; every workflow action is pinned by commit SHA except the SLSA generator, which must be referenced by tag.
+
+Report vulnerabilities according to [`SECURITY.md`](SECURITY.md).
+
+---
 
 ## Documentation
 
-- [`README.md`](README.md) — this file
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) — module map and design decisions
-- [`CHANGELOG.md`](CHANGELOG.md) — release notes
-- [`ROADMAP.md`](ROADMAP.md) — what's next
-- [`SECURITY.md`](SECURITY.md) — disclosure + supported versions
-- [`examples/`](examples/) — runnable scripts, exercised in CI
+- **User manual:** [sebastienrousseau.com/bankstatementparser-writer-xlsx](https://sebastienrousseau.com/bankstatementparser-writer-xlsx/), built from [`docs/`](docs/) with MkDocs
+- **API reference:** [the manual's API page](https://sebastienrousseau.com/bankstatementparser-writer-xlsx/api/), generated from the docstrings
+- **Developer docs:** [`CONTRIBUTING.md`](CONTRIBUTING.md), [`ARCHITECTURE.md`](ARCHITECTURE.md), [`RELEASING.md`](RELEASING.md)
+- **The suite:** [`docs/suite.md`](docs/suite.md), with every `bankstatementparser` package
+- **History:** [`ROADMAP.md`](ROADMAP.md), [`CHANGELOG.md`](CHANGELOG.md)
+- **openpyxl:** [openpyxl.readthedocs.io](https://openpyxl.readthedocs.io/)
 
-## Ecosystem
+---
 
-`bankstatementparser` is part of a modular financial ecosystem. Optional companion packages provide specialized loaders, writers, AI agents, language servers, and transport protocol adapters:
+## Stability guarantees
 
-| Package | GitHub Repository | PyPI | Role | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| **`bankstatementparser`** | [`sebastienrousseau/bankstatementparser`](https://github.com/sebastienrousseau/bankstatementparser) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser.svg)](https://pypi.org/project/bankstatementparser/) | Core Engine | Unified parser for CAMT (052/053), PAIN.001, CSV, OFX, QFX, MT940, and PDF statements |
-| **`bankstatementparser-mcp`** | [`sebastienrousseau/bankstatementparser-mcp`](https://github.com/sebastienrousseau/bankstatementparser-mcp) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-mcp.svg)](https://pypi.org/project/bankstatementparser-mcp/) | AI Protocol | Model Context Protocol (MCP) server exposing statement tools to LLMs & AI agents |
-| **`bankstatementparser-lsp`** | [`sebastienrousseau/bankstatementparser-lsp`](https://github.com/sebastienrousseau/bankstatementparser-lsp) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-lsp.svg)](https://pypi.org/project/bankstatementparser-lsp/) | Developer Tooling | Language Server Protocol (LSP) with live SWIFT MT940 statement validation & diagnostics |
-| **`bankstatementparser-transport-ebics`** | [`sebastienrousseau/bankstatementparser-transport-ebics`](https://github.com/sebastienrousseau/bankstatementparser-transport-ebics) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-transport-ebics.svg)](https://pypi.org/project/bankstatementparser-transport-ebics/) | Transport | Automated bank statement retrieval over EBICS 3.0 (`H005`) and 2.5 (`H004`) protocols |
-| **`bankstatementparser-writer-xlsx`** | [`sebastienrousseau/bankstatementparser-writer-xlsx`](https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-writer-xlsx.svg)](https://pypi.org/project/bankstatementparser-writer-xlsx/) | Output Writer | Formats and exports parsed banking transactions into styled Microsoft Excel (`.xlsx`) workbooks |
-| **`bankstatementparser-writer-qif`** | [`sebastienrousseau/bankstatementparser-writer-qif`](https://github.com/sebastienrousseau/bankstatementparser-writer-qif) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-writer-qif.svg)](https://pypi.org/project/bankstatementparser-writer-qif/) | Output Writer | Serializes transactions into standard Quicken Interchange Format (`.qif`) exchange files |
-| **`bankstatementparser-writer-ofx`** | [`sebastienrousseau/bankstatementparser-writer-ofx`](https://github.com/sebastienrousseau/bankstatementparser-writer-ofx) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-writer-ofx.svg)](https://pypi.org/project/bankstatementparser-writer-ofx/) | Output Writer | Serializes transactions into standard Open Financial Exchange (`.ofx`) XML/SGML files |
-| **`bankstatementparser-writer-swift`** | [`sebastienrousseau/bankstatementparser-writer-swift`](https://github.com/sebastienrousseau/bankstatementparser-writer-swift) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-writer-swift.svg)](https://pypi.org/project/bankstatementparser-writer-swift/) | Output Writer | Exports transactions to SWIFT MT940 customer statements and MT942 interim reports |
-| **`bankstatementparser-loader-bai2`** | [`sebastienrousseau/bankstatementparser-loader-bai2`](https://github.com/sebastienrousseau/bankstatementparser-loader-bai2) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-loader-bai2.svg)](https://pypi.org/project/bankstatementparser-loader-bai2/) | Input Loader | Parses BAI2 cash-management and account balance statements |
-| **`bankstatementparser-loader-mt942`** | [`sebastienrousseau/bankstatementparser-loader-mt942`](https://github.com/sebastienrousseau/bankstatementparser-loader-mt942) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-loader-mt942.svg)](https://pypi.org/project/bankstatementparser-loader-mt942/) | Input Loader | Parses SWIFT MT942 interim transaction reports with credit/debit summary reconciliation |
-| **`bankstatementparser-loader-cfonb`** | [`sebastienrousseau/bankstatementparser-loader-cfonb`](https://github.com/sebastienrousseau/bankstatementparser-loader-cfonb) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-loader-cfonb.svg)](https://pypi.org/project/bankstatementparser-loader-cfonb/) | Input Loader | Parses French CFONB 120 / AFB120 120-byte fixed-width banking statement files |
-| **`bankstatementparser-loader-camt054`** | [`sebastienrousseau/bankstatementparser-loader-camt054`](https://github.com/sebastienrousseau/bankstatementparser-loader-camt054) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-loader-camt054.svg)](https://pypi.org/project/bankstatementparser-loader-camt054/) | Input Loader | Ingests ISO 20022 CAMT.054 real-time debit/credit notification stream XML |
-| **`bankstatementparser-loader-sepa`** | [`sebastienrousseau/bankstatementparser-loader-sepa`](https://github.com/sebastienrousseau/bankstatementparser-loader-sepa) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-loader-sepa.svg)](https://pypi.org/project/bankstatementparser-loader-sepa/) | Input Loader | Ingests ISO 20022 SEPA PAIN.002 payment status reports and PAIN.008 direct debit mandates |
-| **`bankstatementparser-loader-bacs`** | [`sebastienrousseau/bankstatementparser-loader-bacs`](https://github.com/sebastienrousseau/bankstatementparser-loader-bacs) | [![PyPI](https://img.shields.io/pypi/v/bankstatementparser-loader-bacs.svg)](https://pypi.org/project/bankstatementparser-loader-bacs/) | Input Loader | Parses UK BACS Standard 18 / Faster Payments 106-byte fixed-width transmission files |
+- **Versioning.** Releases stay on the `0.0.x` line and step by exactly `0.0.1`, in lockstep with the rest of the `bankstatementparser` suite. Under SemVer a `0.0.x` release may break anything; this project names each break in the CHANGELOG instead.
+- **The breaking axis is the workbook**: the sheets written, the column order for each input shape, how each value is coerced, and which inputs raise. Changing any of them for data that wrote before is a breaking change and is called out in the CHANGELOG, even when no Python signature moves.
+- **Output stability.** The writer is deterministic in its cells: the same data gives the same sheets, headers and values in the same order.
+- **Python API.** `write_xlsx` and its `sheet_name` and `summary` keywords keep their names; names starting with `_` are internal.
+- **Minimum toolchain.** Python 3.10 is the floor; it moves only in a release, for the whole suite at once, with the reason in the CHANGELOG ([`docs/POLICIES.md`](docs/POLICIES.md)).
 
 ---
 
 ## License
 
-Licensed under the [Apache License, Version 2.0][license-url]. Any
-contribution submitted for inclusion shall be licensed as above, without
-additional terms.
-
-## Contributing
-
-Contributions are welcome — open an issue or PR on
-[the repository](https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx).
-
-## Acknowledgements
-
-Built on the [`bankstatementparser`][core] library and
-[openpyxl](https://openpyxl.readthedocs.io/).
-
-[core]: https://github.com/sebastienrousseau/bankstatementparser
-[pypi-url]: https://pypi.org/project/bankstatementparser-writer-xlsx/
-[license-url]: https://opensource.org/license/apache-2-0/
-[ci-url]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/actions/workflows/ci.yml
-[pypi-badge]: https://img.shields.io/pypi/v/bankstatementparser-writer-xlsx.svg?style=for-the-badge
-[python-versions-badge]: https://img.shields.io/pypi/pyversions/bankstatementparser-writer-xlsx.svg?style=for-the-badge
-[license-badge]: https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge
-[coverage-badge]: https://img.shields.io/badge/Coverage-100%25-brightgreen?style=for-the-badge
+Dual-licensed under [Apache License, Version 2.0](LICENSE-APACHE) or [MIT](LICENSE-MIT), at your option (`SPDX-License-Identifier: Apache-2.0 OR MIT`). Built on [openpyxl](https://openpyxl.readthedocs.io/) and the core [`bankstatementparser`](https://github.com/sebastienrousseau/bankstatementparser) library. Any contribution submitted for inclusion in the work shall be dual-licensed as above, without additional terms or conditions.
