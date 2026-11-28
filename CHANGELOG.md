@@ -5,13 +5,21 @@ documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.0.37] - 2026-11-28
 
 ### Changed
 
+- Require `bankstatementparser >= 0.0.36`, the newest core release, and
+  align the version with the suite's 0.0.37 release; `poetry.lock`
+  moves core to 0.0.36.
 - CI: four pinned actions move to their latest releases:
   codeql-action 4.39.5, markdownlint-cli2-action 25.1.0,
   cosign-installer 4.1.4 and sbom-action 0.24.4.
+- `make security` and the Security workflow run bandit's full scan
+  with `pyproject.toml`'s configuration and no fallback: the Makefile
+  reran a medium-severity-only scan whenever the full scan failed, and
+  CI ran only the medium-severity scan, so a low-severity finding could
+  pass both. The full scan is clean.
 
 ### Fixed
 
@@ -347,6 +355,7 @@ the run, locally as well as in CI.
   (`test_docs_accuracy.py`, `test_regression_docs.py`,
   `test_regression_examples.py`).
 
+[0.0.37]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.37
 [0.0.36]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.36
 [0.0.35]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.35
 [0.0.34]: https://github.com/sebastienrousseau/bankstatementparser-writer-xlsx/releases/tag/v0.0.34

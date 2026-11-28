@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/sebastienrousseau/bankstatementparser-writer-xlsx/main/.github/demo.gif" alt="A terminal printing bankstatementparser-writer-xlsx 0.0.36, then the 02_write_transactions.py, 04_write_with_summary.py and 06_value_coercion_and_errors.py examples writing workbooks, reading them back and showing the coercion rules and error paths" width="100%" />
+  <img src="https://raw.githubusercontent.com/sebastienrousseau/bankstatementparser-writer-xlsx/main/.github/demo.gif" alt="A terminal printing bankstatementparser-writer-xlsx 0.0.37, then the 02_write_transactions.py, 04_write_with_summary.py and 06_value_coercion_and_errors.py examples writing workbooks, reading them back and showing the coercion rules and error paths" width="100%" />
 </p>
 
 ---
@@ -76,7 +76,7 @@ Verify the installation:
 
 ```sh
 python -c "import bankstatementparser_writer_xlsx as w; print(w.__version__)"
-# -> 0.0.36
+# -> 0.0.37
 ```
 
 ---
@@ -113,7 +113,7 @@ df = parser.parse()
 write_xlsx(df, "statement.xlsx", summary=parser.get_summary())
 ```
 
-Latest release: v0.0.36, a single `write_xlsx(data, path, ...)` function.
+Latest release: v0.0.37, a single `write_xlsx(data, path, ...)` function.
 
 ---
 
