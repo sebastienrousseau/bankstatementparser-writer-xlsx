@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/sebastienrousseau/bankstatementparser-writer-xlsx/main/.github/demo.gif" alt="A terminal printing bankstatementparser-writer-xlsx 0.0.36, then the 02_write_transactions.py, 04_write_with_summary.py and 06_value_coercion_and_errors.py examples writing workbooks, reading them back and showing the coercion rules and error paths" width="100%" />
+  <img src="https://raw.githubusercontent.com/sebastienrousseau/bankstatementparser-writer-xlsx/main/.github/demo.gif" alt="A terminal printing bankstatementparser-writer-xlsx 0.0.37, then the 02_write_transactions.py, 04_write_with_summary.py and 06_value_coercion_and_errors.py examples writing workbooks, reading them back and showing the coercion rules and error paths" width="100%" />
 </p>
 
 ---
