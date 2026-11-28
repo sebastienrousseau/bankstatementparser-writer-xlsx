@@ -76,7 +76,7 @@ Verify the installation:
 
 ```sh
 python -c "import bankstatementparser_writer_xlsx as w; print(w.__version__)"
-# -> 0.0.36
+# -> 0.0.37
 ```
 
 ---
@@ -113,7 +113,7 @@ df = parser.parse()
 write_xlsx(df, "statement.xlsx", summary=parser.get_summary())
 ```
 
-Latest release: v0.0.36, a single `write_xlsx(data, path, ...)` function.
+Latest release: v0.0.37, a single `write_xlsx(data, path, ...)` function.
 
 ---
 

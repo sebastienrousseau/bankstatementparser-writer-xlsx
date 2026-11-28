@@ -7,7 +7,13 @@ library. Releases stay on the `0.0.x` line, one `0.0.1` step at a time
 with the rest of the suite, so the sections below are ordered, not
 versioned; releases ship when the gates pass, not on a calendar.
 
-## Shipped (0.0.36, current)
+## Shipped (0.0.37, current)
+
+- Built against core 0.0.36, in lockstep with the suite's 0.0.37
+  release; the suite consistency check authenticates its GitHub API
+  request, and CI actions move to their latest pinned releases.
+
+## Shipped (0.0.36)
 
 - Single `write_xlsx(data, path, *, sheet_name, summary)` function
   accepting a pandas `DataFrame`, a list of `Transaction` objects, or a
